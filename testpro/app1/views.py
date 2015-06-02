@@ -16,7 +16,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
 
 class AuthorBooksViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.filter(pk=1)
     serializer_class = BookSerializer
 
     def list(self, request, *args, **kwargs):
@@ -36,6 +36,14 @@ class AuthorBooksViewSet(viewsets.ModelViewSet):
             return response.Response(status=status.HTTP_201_CREATED)
         book.delete()
         return response.Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = Book.objects.filter(authors=kwargs.get('id')).filter(pk=kwargs.get('pk'))
+        serializer = BookSerializer(queryset, many=True, context={'request': request})
+        if len(queryset) > 0:
+            return response.Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return response.Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -65,6 +73,13 @@ class BookAuthorsViewSet(viewsets.ModelViewSet):
         author.delete()
         return response.Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def retrieve(self, request, *args, **kwargs):
+        queryset = Author.objects.filter(books=kwargs.get('id')).filter(pk=kwargs.get('pk'))
+        serializer = AuthorSerializer(queryset, many=True, context={'request': request})
+        if len(queryset) > 0:
+            return response.Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return response.Response(status=status.HTTP_404_NOT_FOUND)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
