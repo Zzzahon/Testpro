@@ -1,10 +1,12 @@
 from django.db import models
 from django.forms import ModelForm
+from django.contrib.auth.models import User, Group, Permission
 
 # Create your models here.
 
 
 class Author(models.Model):
+    user = models.OneToOneField(User, blank=True, null=True)
     name = models.CharField(max_length=200)
     age = models.IntegerField(default=0)
     books = models.ManyToManyField('Book', through='Member', related_name='Member_list')
@@ -29,3 +31,11 @@ class Member(models.Model):
 class Comment(models.Model):
     text = models.CharField(max_length=500)
     book = models.ForeignKey(Book)
+
+
+class Any(models.Model):
+    title = models.CharField(max_length=100)
+    user = models.ForeignKey('auth.User')
+
+    def __unicode__(self):
+        return self.title

@@ -5,9 +5,10 @@ import django_filters
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    author = serializers.SlugRelatedField(queryset=Author.objects.all(), slug_field='name')
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('url', 'username', 'author', 'email', 'groups')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,9 +18,10 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     class Meta:
         model = Author
-        fields = ('url', 'name', 'age', 'books')
+        fields = ('url', 'name', 'age', 'user', 'books')
 
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
@@ -41,3 +43,9 @@ class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member
         fields = ('url', 'book', 'author')
+
+
+class AnySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Any
+        fields = ('title', 'user')

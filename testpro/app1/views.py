@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.http import HttpRequest
 from django.shortcuts import render_to_response
-from rest_framework import viewsets, generics, request, response, status
+from rest_framework import viewsets, generics, request, response, status, urls, permissions
 from serializers import *
 from models import *
+from permissions import *
 import django_filters
 
 # Create your views here.
@@ -13,10 +14,11 @@ import django_filters
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
 
 class AuthorBooksViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.filter(pk=1)
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
 
     def list(self, request, *args, **kwargs):
@@ -49,6 +51,7 @@ class AuthorBooksViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
 
 
 class BookAuthorsViewSet(viewsets.ModelViewSet):
@@ -99,3 +102,14 @@ class UserViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class AnyList(generics.ListAPIView):
+    queryset = Any.objects.all()
+    serializer_class = AnySerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+
+class AnyDetail(generics.RetrieveAPIView):
+    def get_queryset(self):
+        print self.get_queryset()

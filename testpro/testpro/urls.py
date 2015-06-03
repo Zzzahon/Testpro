@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from rest_framework import routers
+from rest_framework.generics import *
 from app1.views import *
 
 router = routers.DefaultRouter()
@@ -24,12 +25,14 @@ router.register(r'authors', AuthorViewSet)
 router.register(r'books', BookViewSet)
 router.register(r'members', MemberViewSet)
 router.register(r'comments', CommentViewSet)
-#router.register(r'groups', GroupViewSet)
-#router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
+router.register(r'users', UserViewSet)
 router.register(r'authors/(?P<id>\d+)/books', AuthorBooksViewSet)
 router.register(r'books/(?P<id>\d+)/authors', BookAuthorsViewSet)
 
+
 urlpatterns = [
+    url(r'^api/anys/', AnyList.as_view()),
     url(r'^api/', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
