@@ -26,5 +26,6 @@ class ManyToManyTest(TestCase):
 
     def testM2M(self):
         member = Member.objects.get(pk=1)
-        print member
         self.assertEqual(member.author.age, 22)
+        member = Member.objects.get(pk=2)
+        self.assertEqual(member.book.title, 'Stol')
