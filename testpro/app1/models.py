@@ -27,6 +27,10 @@ class Member(models.Model):
     book = models.ForeignKey(Book)
     author = models.ForeignKey(Author)
 
+    def __unicode__(self):
+        str = self.author.name + ' : ' + self.book.title
+        return str
+
 
 class Comment(models.Model):
     text = models.CharField(max_length=500)
