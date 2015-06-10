@@ -6,7 +6,7 @@ from django.contrib.auth.models import User, Group, Permission
 
 
 class Author(models.Model):
-    user = models.OneToOneField(User, blank=True, null=True)
+    user = models.OneToOneField(User, blank=True, null=True, unique=True)
     name = models.CharField(max_length=200)
     age = models.IntegerField(default=0)
     books = models.ManyToManyField('Book', through='Member', related_name='Member_list')
