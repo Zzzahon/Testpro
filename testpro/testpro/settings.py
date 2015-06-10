@@ -58,14 +58,12 @@ WSGI_APPLICATION = 'testpro.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ddb',
-        'USER': 'testUser',
-        'PASSWORD': '1234',
-        'HOST': '127.0.0.1', # Set to empty string for localhost.
-        'PORT': '8001', # Set to empty string for default.
-    }
+    'default': dict(ENGINE='django.db.backends.postgresql_psycopg2',
+                    NAME='testdb',
+                    USER='testUser',
+                    PASSWORD='1234',
+                    HOST='127.0.0.1',
+                    PORT='8001')
 }
 
 REST_FRAMEWORK = {
